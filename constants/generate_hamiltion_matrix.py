@@ -10,27 +10,19 @@ for i in range(lattice_width):
     for j in range(lattice_width):
         if i != 0:
             list_connection.append(
-                (
-                    i * lattice_width + j + 1,
-                    i * lattice_width + j - lattice_width + 1,
-                    1,
-                )
+                (i * lattice_width + j + 1, (i - 1) * lattice_width + j + 1, 1)
             )
         if j != 0:
             list_connection.append(
-                (i * lattice_width + j + 1, i * lattice_width + j - 1 + 1, 1)
+                (i * lattice_width + j + 1, i * lattice_width + (j - 1) + 1, 1)
             )
         if j != lattice_width - 1:
             list_connection.append(
-                (i * lattice_width + j + 1, i * lattice_width + j + 1 + 1, 1)
+                (i * lattice_width + j + 1, i * lattice_width + (j + 1) + 1, 1)
             )
         if i != lattice_width - 1:
             list_connection.append(
-                (
-                    i * lattice_width + j + 1,
-                    i * lattice_width + j + lattice_width + 1,
-                    1,
-                )
+                (i * lattice_width + j + 1, (i + 1) * lattice_width + j + 1, 1)
             )
 
 num_spins = lattice_width ** 2

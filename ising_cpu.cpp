@@ -62,7 +62,9 @@ int main(int argc, char **argv)
 
     initializeSpinVec(spinVec);
     //debugSpinVal(spinVec);
-    std::cout << "start annealing with initial energy:start temp " << startTemp << " num_temps: " << num_temps << " num_sweeps_per_beta: " << num_sweeps_per_beta << " files " << filename << linear_file << std::endl;
+    std::cout << "\nStarting annealing with initial energy startTemp: " << startTemp << " num_temps: "
+        << num_temps << " num_sweeps_per_beta: " << num_sweeps_per_beta << " files: "
+        << filename << " " << linear_file << "\n" << std::endl;
     std::vector<double> beta_schedule = create_beta_schedule_linear(num_temps, startTemp, 0.001f);
 
     std::string out_filename = "avgmagnet_";
@@ -109,15 +111,15 @@ int main(int argc, char **argv)
             {
                 current_spinIdx = RANDOM_SELECTION_SPINS ? int_dist(rng) : spinIdx;
                 updateMetropolisHasting(spinVec, num_spins, localEnergyPerSpin, current_spinIdx, beta_schedule.at(i));
-            }
-#endif /* PARALLEL */
         }
+#endif /* PARALLEL */
+    }
 
         float magnet = avgMagnetisation(spinVec, beta_schedule.at(i));
         if (debug)
             fprintf(fptr, "Temperature %.6f magnet %.6f \n", 1.f / beta_schedule.at(i), magnet);
         avg_magnet.push_back(magnet);
-    }
+}
 
     auto t1 = std::chrono::high_resolution_clock::now();
 
@@ -125,7 +127,7 @@ int main(int argc, char **argv)
     fprintf(fptr, "duration %.3f \n", (duration * 1e-6));
     fclose(fptr);
 
-    printf("\telapsed time: %f sec\n", duration * 1e-6);
+    printf("\n\telapsed time: %f sec\n", duration * 1e-6);
     printf("\tupdates per ns: %f\n", (double)(spinVec.size()) * num_sweeps_per_beta / duration * 1e-3);
 
     if (debug)
@@ -160,10 +162,8 @@ int main(int argc, char **argv)
         fprintf(fptr1, "\ttotal energy value: %.6f\n", total_energy);
 
         fclose(fptr1);
-        printf("\ttotal energy value: %.6f\n", total_energy);
-
+        printf("\ttotal energy value: %f\n\n", total_energy);
     }
 
     return 0;
 }
-

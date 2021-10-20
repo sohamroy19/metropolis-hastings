@@ -128,7 +128,7 @@ void changeInLocalEnePerSpin(const std::vector<float> &adjMat, std::vector<float
     localEnergyPerSpin[spinIdx] = changeInEnergy;
 }
 
-float avgMagnetisation(const std::vector<signed char> &spinVec, float temp)
+float avgMagnetisation(const std::vector<signed char> &spinVec, float beta)
 {
     float ones = 0;
     for (int i = 0; i < spinVec.size(); i++)
@@ -137,8 +137,8 @@ float avgMagnetisation(const std::vector<signed char> &spinVec, float temp)
         ones += (float)spinVec[i];
     }
     float avg_magnet = ones / spinVec.size();
-
-    std::cout << "\n temp: " << 1.f / temp << " Avg magnetization: " << avg_magnet << std::endl;
+    
+    printf(" temp: %f\tmagnetization: % g\n", 1.f / beta, avg_magnet);
 
     return avg_magnet;
 }
