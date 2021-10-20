@@ -6,7 +6,7 @@
 #define PARALLEL 0
 #define RANDOM_SELECTION_SPINS 0
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
     bool debug = true;
 
@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 
     double starttime = rtclock();
 
-    std::vector<float> adjMat;// 
+    std::vector<float> adjMat;
     ParseData parseData(filename, adjMat);
 
     std::vector<float> linearTermsVect;
@@ -74,7 +74,7 @@ int main(int argc, char** argv)
     std::string sub = in_adjmat.substr(pos + 1);
     out_filename += sub;
 
-    FILE* fptr = fopen(out_filename.c_str(), "w");
+    FILE *fptr = fopen(out_filename.c_str(), "w");
 
     auto t0 = std::chrono::high_resolution_clock::now();
 
@@ -139,7 +139,7 @@ int main(int argc, char** argv)
         std::string sub = adjmat.substr(pos + 1);
         spins_filename += sub;
 
-        FILE* fptr1 = fopen(spins_filename.c_str(), "w");
+        FILE *fptr1 = fopen(spins_filename.c_str(), "w");
         for (unsigned int spinIdx = 0; spinIdx < spinVec.size(); spinIdx++)
         {
             fprintf(fptr1, "%d\t", (int)spinVec[spinIdx]);

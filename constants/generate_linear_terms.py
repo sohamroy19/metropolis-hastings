@@ -1,5 +1,5 @@
 # create J_ij matrix
-lattice_width = 60
+lattice_width = 20
 filename = "linear_{}x{}.txt".format(lattice_width, lattice_width)
 f = open(filename, "w")
 

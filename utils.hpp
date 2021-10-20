@@ -3,16 +3,15 @@ Class: Parse data
 Desc: Parse Jij matrix
 */
 
+#include <chrono>
 #include <fstream>
 #include <functional>
-#include <memory>
-#include <sstream>
-#include <string>
-
-#include <chrono>
 #include <iostream>
 #include <math.h>
+#include <memory>
 #include <random>
+#include <sstream>
+#include <string>
 #include <sys/time.h>
 #include <vector>
 
@@ -23,20 +22,20 @@ using std::string;
 
 double rtclock();
 
-void printtime(const char* str, double starttime, double endtime);
+void printtime(const char *str, double starttime, double endtime);
 
 class ParseData
 {
 public:
-    ParseData(const string filename, std::vector<float>& adjMat);
-    void readDataDim(string data, std::vector<float>& adjMat);
-    void readData(string data, std::vector<float>& adjMat);
-    void readLinearValues(const string filename, std::vector<float>& linearVect);
+    ParseData(const string filename, std::vector<float> &adjMat);
+    void readDataDim(string data, std::vector<float> &adjMat);
+    void readData(string data, std::vector<float> &adjMat);
+    void readLinearValues(const string filename, std::vector<float> &linearVect);
 
     std::vector<unsigned int> getDataDims() const;
 
 private:
-    std::unique_ptr<std::ifstream, std::function<void(std::ifstream*)>> _pifstream;
+    std::unique_ptr<std::ifstream, std::function<void(std::ifstream *)>> _pifstream;
     //std::vector<int> _matA;
     std::vector<unsigned int> _data_dims; // rows and columns
 };
@@ -49,27 +48,27 @@ void printVecOfVec(std::vector<float> adjMat);
 
 std::vector<double> create_beta_schedule_linear(uint32_t num_sweeps, double beta_start, double beta_end = 0.001f);
 
-float avgMagnetisation(const std::vector<signed char>& spinVec, float temp);
+float avgMagnetisation(const std::vector<signed char> &spinVec, float temp);
 
-void initializeSpinVec(std::vector<signed char>& spinVec);
+void initializeSpinVec(std::vector<signed char> &spinVec);
 
-void changeInLocalEnePerSpin(const std::vector<float>& adjMat, std::vector<float>& linearTermsVect, unsigned int adj_mat_size,
-    const std::vector<signed char>& spinVec, unsigned int num_spins,
-    std::vector<float>& localEnergyPerSpin,
+void changeInLocalEnePerSpin(const std::vector<float> &adjMat, std::vector<float> &linearTermsVect, unsigned int adj_mat_size,
+    const std::vector<signed char> &spinVec, unsigned int num_spins,
+    std::vector<float> &localEnergyPerSpin,
     unsigned int spinIdx);
 
-void updateMetropolisHasting(std::vector<signed char>& spinVec, unsigned int num_spins,
-    const std::vector<float>& localEnergyPerSpin,
+void updateMetropolisHasting(std::vector<signed char> &spinVec, unsigned int num_spins,
+    const std::vector<float> &localEnergyPerSpin,
     unsigned int spinIdx, float beta);
 
-float partialMaxCut(const std::vector<float>& adjMat, std::vector<float>& linearTermsVect, unsigned int adj_mat_size,
-    const std::vector<signed char>& spinVec, unsigned int num_spins,
+float partialMaxCut(const std::vector<float> &adjMat, std::vector<float> &linearTermsVect, unsigned int adj_mat_size,
+    const std::vector<signed char> &spinVec, unsigned int num_spins,
     unsigned int spinIdx);
 
-void debugSpinVal(std::vector<signed char>& spinVec);
+void debugSpinVal(std::vector<signed char> &spinVec);
 
-void updateMetropolisHasting(std::vector<signed char>& spinVec, unsigned int num_spins,
-    const std::vector<float>& localEnergyPerSpin,
+void updateMetropolisHasting(std::vector<signed char> &spinVec, unsigned int num_spins,
+    const std::vector<float> &localEnergyPerSpin,
     unsigned int spinIdx, float beta)
 {
     static std::random_device rd;
@@ -111,9 +110,9 @@ void updateMetropolisHasting(std::vector<signed char>& spinVec, unsigned int num
 #endif /* STANDARDIMP */
 }
 
-void changeInLocalEnePerSpin(const std::vector<float>& adjMat, std::vector<float>& linearTermsVect, unsigned int adj_mat_size,
-    const std::vector<signed char>& spinVec, unsigned int num_spins,
-    std::vector<float>& localEnergyPerSpin,
+void changeInLocalEnePerSpin(const std::vector<float> &adjMat, std::vector<float> &linearTermsVect, unsigned int adj_mat_size,
+    const std::vector<signed char> &spinVec, unsigned int num_spins,
+    std::vector<float> &localEnergyPerSpin,
     unsigned int spinIdx)
 {
     float changeInEnergy = 0.f;
@@ -129,7 +128,7 @@ void changeInLocalEnePerSpin(const std::vector<float>& adjMat, std::vector<float
     localEnergyPerSpin[spinIdx] = changeInEnergy;
 }
 
-float avgMagnetisation(const std::vector<signed char>& spinVec, float temp)
+float avgMagnetisation(const std::vector<signed char> &spinVec, float temp)
 {
     float ones = 0;
     for (int i = 0; i < spinVec.size(); i++)
@@ -144,8 +143,8 @@ float avgMagnetisation(const std::vector<signed char>& spinVec, float temp)
     return avg_magnet;
 }
 
-float partialMaxCut(const std::vector<float>& adjMat, std::vector<float>& linearTermsVect, unsigned int adj_mat_size,
-    const std::vector<signed char>& spinVec, unsigned int num_spins,
+float partialMaxCut(const std::vector<float> &adjMat, std::vector<float> &linearTermsVect, unsigned int adj_mat_size,
+    const std::vector<signed char> &spinVec, unsigned int num_spins,
     unsigned int spinIdx)
 {
     float pMaxCut = 0.f;
@@ -160,7 +159,7 @@ float partialMaxCut(const std::vector<float>& adjMat, std::vector<float>& linear
     return pMaxCut;
 }
 
-void initializeSpinVec(std::vector<signed char>& spinVec)
+void initializeSpinVec(std::vector<signed char> &spinVec)
 {
     static std::random_device rd;
     static std::mt19937 gen(rd());
@@ -213,7 +212,7 @@ void printVecOfVec(std::vector<float> adjMat)
     }
 }
 
-void debugSpinVal(std::vector<signed char>& spinVec)
+void debugSpinVal(std::vector<signed char> &spinVec)
 {
     std::cout << "\n";
     for (int j = 0; j < spinVec.size(); j++)
@@ -234,12 +233,12 @@ double rtclock()
     return (Tp.tv_sec + Tp.tv_usec * 1.0e-6);
 }
 
-void printtime(const char* str, double starttime, double endtime)
+void printtime(const char *str, double starttime, double endtime)
 {
     printf("%s%3f seconds\n", str, endtime - starttime);
 }
 
-ParseData::ParseData(const string filename, std::vector<float>& adjMat) : _pifstream(new std::ifstream(filename, std::ifstream::in), [](std::ifstream* fp) { fp->close(); })
+ParseData::ParseData(const string filename, std::vector<float> &adjMat) : _pifstream(new std::ifstream(filename, std::ifstream::in), [](std::ifstream *fp) { fp->close(); })
 {
     int j = 0;
     string row_line;
@@ -265,11 +264,11 @@ ParseData::ParseData(const string filename, std::vector<float>& adjMat) : _pifst
     }
 }
 
-void ParseData::readLinearValues(const string filename, std::vector<float>& linearVect)
+void ParseData::readLinearValues(const string filename, std::vector<float> &linearVect)
 {
-    std::unique_ptr<std::ifstream, std::function<void(std::ifstream*)>> pLVifstream(
+    std::unique_ptr<std::ifstream, std::function<void(std::ifstream *)>> pLVifstream(
         new std::ifstream(filename, std::ifstream::in),
-        [](std::ifstream* fp) { fp->close(); });
+        [](std::ifstream *fp) { fp->close(); });
 
     string row_line;
     if (pLVifstream->is_open())
@@ -294,7 +293,7 @@ void ParseData::readLinearValues(const string filename, std::vector<float>& line
     // print the value of the vector
 }
 
-void ParseData::readDataDim(string data, std::vector<float>& adjMat)
+void ParseData::readDataDim(string data, std::vector<float> &adjMat)
 {
     std::istringstream input;
     input.str(data);
@@ -310,7 +309,7 @@ void ParseData::readDataDim(string data, std::vector<float>& adjMat)
     adjMat.resize(_data_dims[0] * _data_dims[0]);
 }
 
-void ParseData::readData(string data, std::vector<float>& adjMat)
+void ParseData::readData(string data, std::vector<float> &adjMat)
 {
     std::istringstream input;
     input.str(data);
@@ -338,7 +337,7 @@ std::vector<unsigned int> ParseData::getDataDims() const
 } // Parse class ends
 
 #if 0 // Nearest Neighbor
-void initializeMat(vector<signed char>& matA, size_t size_matA)
+void initializeMat(vector<signed char> &matA, size_t size_matA)
 {
     static std::random_device rd;
     static std::mt19937 gen(rd());
@@ -357,7 +356,7 @@ void initializeMat(vector<signed char>& matA, size_t size_matA)
         }
     }
 }
-void updateMat(vector<signed char>& mat, float inv_temp, size_t shift)
+void updateMat(vector<signed char> &mat, float inv_temp, size_t shift)
 {
     static std::random_device rd;
     static std::mt19937 gen(rd());
