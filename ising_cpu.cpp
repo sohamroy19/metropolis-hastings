@@ -111,15 +111,15 @@ int main(int argc, char **argv)
             {
                 current_spinIdx = RANDOM_SELECTION_SPINS ? int_dist(rng) : spinIdx;
                 updateMetropolisHasting(spinVec, num_spins, localEnergyPerSpin, current_spinIdx, beta_schedule.at(i));
-        }
+            }
 #endif /* PARALLEL */
-    }
+        }
 
         float magnet = avgMagnetisation(spinVec, beta_schedule.at(i));
         if (debug)
             fprintf(fptr, "Temperature %.6f magnet %.6f \n", 1.f / beta_schedule.at(i), magnet);
         avg_magnet.push_back(magnet);
-}
+    }
 
     auto t1 = std::chrono::high_resolution_clock::now();
 
@@ -148,7 +148,6 @@ int main(int argc, char **argv)
         }
 
         fprintf(fptr1, "\n\n\n");
-        float total_energy = 0.f;
 
         for (unsigned int spinIdx = 0; spinIdx < spinVec.size(); spinIdx++)
         {
@@ -156,9 +155,9 @@ int main(int argc, char **argv)
                 spinVec, num_spins,
                 localEnergyPerSpin,
                 spinIdx);
-            total_energy += localEnergyPerSpin[spinIdx];
         }
 
+        float total_energy = totalEnergy(adjMat, linearTermsVect, adj_mat_size, spinVec, num_spins);
         fprintf(fptr1, "\ttotal energy value: %.6f\n", total_energy);
 
         fclose(fptr1);

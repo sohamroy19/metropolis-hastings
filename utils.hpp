@@ -137,10 +137,33 @@ float avgMagnetisation(const std::vector<signed char> &spinVec, float beta)
         ones += (float)spinVec[i];
     }
     float avg_magnet = ones / spinVec.size();
-    
-    printf(" temp: %f\tmagnetization: % g\n", 1.f / beta, avg_magnet);
+
+    printf(" temp: %f \tmagnetization: % g\n", 1.f / beta, avg_magnet);
 
     return avg_magnet;
+}
+
+float totalEnergy(const std::vector<float> &adjMat, std::vector<float> &linearTermsVect, unsigned int adj_mat_size,
+    const std::vector<signed char> &spinVec, unsigned int num_spins)
+{
+    float totalEnergy = 0.f;
+    for (int spinIdx; spinIdx < num_spins; spinIdx++)
+    {
+        float perSpinEnergy = 0.f;
+        for (int index = 0; index < num_spins; index++)
+        {
+            perSpinEnergy += -1.f * adjMat[num_spins * spinIdx + index] * (float)spinVec[index]; // S = - \sum Jij[] s[j] - h[i]
+        }
+
+        perSpinEnergy += -1.f * linearTermsVect[spinIdx];
+        // energy = S * s[i] 
+        perSpinEnergy *= (float)spinVec[spinIdx];
+
+        totalEnergy += perSpinEnergy;
+    }
+
+    totalEnergy *= 0.5;
+    return totalEnergy;
 }
 
 float partialMaxCut(const std::vector<float> &adjMat, std::vector<float> &linearTermsVect, unsigned int adj_mat_size,
@@ -399,6 +422,6 @@ void updateMat(vector<signed char> &mat, float inv_temp, size_t shift)
             mat[i] = -lij;
         }
 
-    }
+}
 }
 #endif /* #if 0 */
