@@ -147,7 +147,7 @@ float totalEnergy(const std::vector<float> &adjMat, std::vector<float> &linearTe
     const std::vector<signed char> &spinVec, unsigned int num_spins)
 {
     float totalEnergy = 0.f;
-    for (int spinIdx; spinIdx < num_spins; spinIdx++)
+    for (int spinIdx = 0; spinIdx < num_spins; spinIdx++)
     {
         float perSpinEnergy = 0.f;
         for (int index = 0; index < num_spins; index++)
@@ -421,7 +421,6 @@ void updateMat(vector<signed char> &mat, float inv_temp, size_t shift)
         {
             mat[i] = -lij;
         }
-
-}
+    }
 }
 #endif /* #if 0 */
