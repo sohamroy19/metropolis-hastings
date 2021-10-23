@@ -380,7 +380,7 @@ void ParseData::readData(string data, std::vector<float> &adjMat)
         int sec_entry = std::stoi(line_data.at(1));
 
         adjMat[(_data_dims.at(0) * (first_entry - 1)) + (sec_entry - 1)] = -stof(line_data.at(2));
-        // adjMat[(_data_dims.at(0) * (sec_entry - 1)) + (first_entry - 1)] = -stof(line_data.at(2));
+        adjMat[(_data_dims.at(0) * (sec_entry - 1)) + (first_entry - 1)] = -stof(line_data.at(2));
         // include the above line if only upper triangle of adjacencies is given
 
         //std::cout << adjMat[_data_dims.at(0)*(line_data.at(0) - 1) + (line_data.at(1) - 1)] << std::endl;

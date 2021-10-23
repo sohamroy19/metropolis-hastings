@@ -4,13 +4,13 @@
 #include <cassert>
 
 /* 0:Serial, 1:Parallel */
-#define PARALLEL 0
+#define PARALLEL 1
 
 /* 0:Standard, 1:Algorithm1, 2:Algorithm2, 3:Metropolis-Hastings */
-#define IMPLEMENTATION 3
+#define IMPLEMENTATION 1
 
 /* 0:InOrder, 1:Random */
-#define RANDOM_SELECTION_SPINS 0
+#define RANDOM_SELECTION_SPINS 1
 
 int main(int argc, char **argv)
 {
@@ -68,9 +68,13 @@ int main(int argc, char **argv)
 
     initializeSpinVec(spinVec);
     //debugSpinVal(spinVec);
-    std::cout << "\nStarting annealing with initial energy startTemp: " << startTemp
-        << " num_temps: " << num_temps << " num_sweeps_per_beta: " << num_sweeps_per_beta
-        << " files: " << filename << " " << linear_file << "\n" << std::endl;
+
+    std::cout << "\nStarting annealing with startTemp: " << startTemp << ", num_temps: " << num_temps
+        << ", num_sweeps_per_beta: " << num_sweeps_per_beta << ", files: " << filename << " " << linear_file
+        << "\n" << "Threading: " << (PARALLEL ? "Parallel" : "Serial")
+        << ", Random Spin Selection: " << (RANDOM_SELECTION_SPINS ? "On" : "Off") 
+        << ", Implementation: " << IMPLEMENTATION << "\n" << std::endl;
+
     std::vector<double> beta_schedule = create_beta_schedule_linear(num_temps, startTemp, 0.001f);
     std::vector<double> fp_schedule = create_fp_schedule_linear(num_temps);
 
@@ -98,16 +102,17 @@ int main(int argc, char **argv)
         for (int j = 0; j < num_sweeps_per_beta; j++)
         {
 #if PARALLEL
+            std::vector<unsigned int> spinList(spinVec.size());
+            
             for (int spinIdx = 0; spinIdx < spinVec.size(); spinIdx++)
             {
-                current_spinIdx = RANDOM_SELECTION_SPINS ? int_dist(rng) : spinIdx;
-                changeInLocalEnePerSpin(adjMat, linearTermsVect, spinVec, localEnergyPerSpin, current_spinIdx);
+                spinList[spinIdx] = RANDOM_SELECTION_SPINS ? int_dist(rng) : spinIdx;
+                changeInLocalEnePerSpin(adjMat, linearTermsVect, spinVec, localEnergyPerSpin, spinList[spinIdx]);
             }
 
             for (int spinIdx = 0; spinIdx < spinVec.size(); spinIdx++)
             {
-                current_spinIdx = RANDOM_SELECTION_SPINS ? int_dist(rng) : spinIdx;
-                updateMetropolisHasting(spinVec, localEnergyPerSpin, current_spinIdx,
+                updateMetropolisHasting(spinVec, localEnergyPerSpin, spinList[spinIdx],
                                         beta_schedule.at(i), fp_schedule.at(i), IMPLEMENTATION);
             }
 #else /* not PARALLEL = SERIAL */
@@ -128,13 +133,13 @@ int main(int argc, char **argv)
                 spinVec[random_indices[spinIdx]] = -spinVec[random_indices[spinIdx]];
             }
 #endif /* Algorithm 1 */
-        }
+            }
 
         float magnet = avgMagnetisation(spinVec, beta_schedule.at(i));
         if (debug)
             fprintf(fptr, "Temperature %.6f magnet %.6f \n", 1.f / beta_schedule.at(i), magnet);
         avg_magnet.push_back(magnet);
-    }
+        }
 
     auto t1 = std::chrono::high_resolution_clock::now();
 
@@ -177,4 +182,4 @@ int main(int argc, char **argv)
     }
 
     return 0;
-}
+    }
